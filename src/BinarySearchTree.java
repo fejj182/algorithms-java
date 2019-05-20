@@ -1,8 +1,84 @@
+import java.util.NoSuchElementException;
+
 public class BinarySearchTree<E extends Comparable<E>> {
-    TreeNode root;
+    TreeNode<E> root;
 
     public BinarySearchTree(E value) {
         this.root = new TreeNode<>(value, null);
+    }
+
+    public TreeNode<E> find(E value){
+        if (value.equals(root.getValue())) {
+            return root;
+        } else if (value.compareTo(root.getValue()) < 0) {
+            return this.find(value, root.getLeftChild());
+        } else if (value.compareTo(root.getValue()) > 0) {
+            return this.find(value, root.getRightChild());
+        }
+
+        throw new NoSuchElementException("Element cannot be found");
+    }
+
+    public TreeNode<E> find(E value, TreeNode<E> root){
+        if (value.equals(root.getValue())) {
+            return root;
+        } else if (value.compareTo(root.getValue()) < 0 && root.getLeftChild() != null) {
+            return this.find(value, root.getLeftChild());
+        } else if (value.compareTo(root.getValue()) > 0 && root.getRightChild() != null) {
+            return this.find(value, root.getRightChild());
+        }
+
+        throw new NoSuchElementException("Element cannot be found");
+    }
+
+    public void insert(E value) {
+        if (value.compareTo(root.getValue()) < 0) {
+            if (root.getLeftChild() != null) {
+                this.insert(value, root.getLeftChild());
+            } else {
+                root.addLeftChild(value);
+            }
+        } else if (value.compareTo(root.getValue()) > 0) {
+            if (root.getRightChild() != null) {
+                this.insert(value, root.getRightChild());
+            } else {
+                root.addRightChild(value);
+            }
+        } else {
+            throw new IllegalArgumentException("Value already present in tree");
+        }
+    }
+
+    public void insert(E value, TreeNode<E> root) {
+        if (value.compareTo(root.getValue()) < 0) {
+            if (root.getLeftChild() != null) {
+                this.insert(value, root.getLeftChild());
+            } else {
+                root.addLeftChild(value);
+            }
+        } else if (value.compareTo(root.getValue()) > 0) {
+            if (root.getRightChild() != null) {
+                this.insert(value, root.getRightChild());
+            } else {
+                root.addRightChild(value);
+            }
+        } else {
+            throw new IllegalArgumentException("Value already present in tree");
+        }
+    }
+
+    public boolean contains(E value) {
+        TreeNode<E> current = root;
+        while (current != null) {
+            if (value == current.getValue()) {
+                return true;
+            } else if (value.compareTo(current.getValue()) < 0) {
+                current = current.getLeftChild();
+            } else if (value.compareTo(current.getValue()) > 0) {
+                current = current.getRightChild();
+            }
+        }
+        return false;
     }
 }
 
